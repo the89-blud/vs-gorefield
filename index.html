@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="robots" content="noindex, nofollow" />
+    <link rel="canonical" href="https://www.snokido.com/game/fnf-vs-gorefield" />
+	<title>Embed</title>
+    <link rel="preconnect" href="https://universal.wgplayer.com" crossorigin="anonymous">
+    <style>
+        html, body{width:100%;height:100%;background:#000000;padding:0;margin:0;border:0;overflow:hidden}
+        body{display:flex;align-items:center;justify-content:center}
+        #game{width:100%;height:100%;display:none;overflow:hidden}
+        #embed{display:block;width:100%;height:100%;padding:0;margin:0;border:0}
+        #loading {width: 48px;height: 48px;border: 5px solid #FFF;border-bottom-color: transparent;border-radius: 50%;box-sizing: border-box;animation: rotation 1s linear infinite}
+        @keyframes rotation {0% {transform: rotate(0deg)}100% {transform: rotate(360deg)}}
+    </style>
+</head>
+<body>
+    <div id="game"><iframe id="embed" src="about:blank" allow="autoplay" scrolling="no" allowfullscreen></iframe></div>
+    <div id="loading"></div>
+	<script>
+        let gameRendered = false;
+        let pgInitStarted = false;
+        let hardFallbackTimer = setTimeout(renderGame, 5000);
+        const gameUrl = "https:\/\/w8.snokido.com\/games\/html5\/friday-night-funkin\/gorefield09\/game.html";
+        const scrolling = "no";
+
+        function clearFallback() {
+            if (hardFallbackTimer) {
+                clearTimeout(hardFallbackTimer);
+                hardFallbackTimer = null;
+            }
+        }
+
+        function renderGame() {
+            if (gameRendered) {return;}
+            gameRendered = true;
+            clearFallback();
+            const loading = document.getElementById('loading');
+            const gameContainer = document.getElementById('game');
+            const ifrm = document.getElementById('embed');
+            if (loading) {loading.remove()}
+            ifrm.setAttribute('scrolling', scrolling);
+            try {
+                ifrm.contentWindow.location.replace(gameUrl);
+            } catch (error) {
+                ifrm.setAttribute('src', gameUrl);
+            }
+            ifrm.addEventListener('load', () => {
+                ifrm.focus();
+            }, { once: true });
+            gameContainer.style.display = 'block';
+        }
+
+        function initWG(){
+            console.log("Weegoo Start");
+            if (gameRendered || pgInitStarted) {return;}
+            pgInitStarted = true;
+            clearFallback();
+            try{
+                window[preroll.config.loaderObjectName].fetchAd(()=>{
+                    try{
+                        renderGame();
+                    }
+                    catch(e){
+                        console.warn( "renderGame is not defined" );
+                    }});
+                }
+            catch(e){
+                renderGame();
+            }
+        }
+
+        document.addEventListener('wgSdkReady', initWG, { once: true });
+        
+        try {
+            !function(e,t){
+                const a = e.createElement("script");
+                const m = e.getElementsByTagName("script")[0];
+                a.async = 1;
+                a.src = t;
+                a.fetchPriority = 'high';
+                a.onerror = renderGame;
+                m.parentNode.insertBefore(a,m);
+            }(document,"https://universal.wgplayer.com/tag/?lh="+window.location.hostname+"&wp="+window.location.pathname+"&ws="+window.location.search);
+        } catch(e) {
+            renderGame();
+        }
+    </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"b062b5bc397843a2b7cac03511be2721","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
